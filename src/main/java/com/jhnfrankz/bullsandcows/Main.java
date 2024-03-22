@@ -1,56 +1,48 @@
 package com.jhnfrankz.bullsandcows;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
     private static final Scanner scanner = new Scanner(System.in);
-    private static final String secretCode = "9305";
-    private static String inputNumber;
-    private static int cows = 0;
-    private static int bulls = 0;
+    private static String secretCode;
+    private static int length;
 
     public static void main(String[] args) {
-        readNumber();
-        countBullsAndCows();
-        showGrade();
+        readLength();
+        checkLength();
     }
 
-    public static void readNumber() {
-        inputNumber = scanner.nextLine();
+    public static void readLength() {
+        length = Integer.parseInt(scanner.nextLine());
     }
 
-    public static void countBullsAndCows() {
-        if (secretCode.equals(inputNumber)) {
-            bulls = 4;
+    public static void checkLength() {
+        if (length > 10) {
+            System.out.printf("Error: can't generate a secret number with a length of %d because " +
+                    "there aren't enough unique digits.", length);
         } else {
-            for (int i = 0; i < secretCode.length(); i++) {
-                if (isBull(i)) {
-                    bulls++;
-                } else if (isCow(i)) {
-                    cows++;
-                }
-            }
+            generateRandomSecretCode();
+            System.out.printf("The random secret number is %s.", secretCode);
         }
     }
 
-    public static boolean isCow(int i) {
-        return secretCode.contains(String.valueOf(inputNumber.charAt(i)));
-    }
+    public static void generateRandomSecretCode() {
+        List<Integer> randomList =
+                new ArrayList<>(List.of(0,1,2,3,4,5,6,7,8,9));
 
-    public static boolean isBull(int i) {
-        return secretCode.charAt(i) == inputNumber.charAt(i);
-    }
-
-    public static void showGrade() {
-        if (cows > 0 && bulls > 0) {
-            System.out.printf("Grade: %d bull(s) and %d cows(s). The secret code is %s.",bulls, cows, secretCode);
-        } else if (bulls > 0) {
-            System.out.printf("Grade: %d bull(s). The secret code is %s.",bulls, secretCode);
-        } else if (cows > 0) {
-            System.out.printf("Grade: %d cows(s). The secret code is %s.",cows, secretCode);
-        } else {
-            System.out.printf("Grade: None. The secret code is %s.", secretCode);
+        while (randomList.get(0) == 0) {
+            Collections.shuffle(randomList);
         }
+
+        StringBuilder result = new StringBuilder();
+
+        for (var i : randomList.subList(0, length)) {
+            result.append(i);
+        }
+
+        secretCode = result.toString();
     }
 }
