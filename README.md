@@ -1,18 +1,22 @@
-### Improve the code generator
+### New level
 
-Stage 5/7:Improve the code generator
+Stage 6/7:New level
 
 #### Description
 
-The algorithm suggested for generating the secret code in the previous stage was really a “reinvention of the wheel”. Java already has the tools for generating random numbers! Research some common pseudo-random generation methods, such as `Math.random()` and other methods from the `Random` class. Choose the method you like and use it to rewrite the secret code generation. To learn more about the `Random` class, jump to [Random](https://hyperskill.org/learn/step/4910) topic. If you want to get to know all the intricacies of the `Math` library, don't forget to check out the [Math](https://hyperskill.org/learn/step/3501) library topic as well.
+Some players need a challenge, so let's make the secret code in the game harder to guess. Add support for more than 10 symbols by adding letters. Now, the secret code can contain the numbers `0-9` and the lowercase Latin characters `a-z`. The new maximum length for the code is 36. Note that the length of the secret word may not match the number of possible characters in the secret code, so you should request input twice: once for the secret code length and once for the number of possible characters.
 
-Nothing else is supposed to change at this stage: the program asks for the length, generates a secret code, and then receives and grades the attempts until the code is guessed. Your task here is to rewrite the code generator without breaking the existing code.
-
+Also, since a secret code is not a number anymore, the symbol `0` should be allowed as the first character in a secret code.
 
 
 #### Objectives
 
-In this stage, rewrite the secret code generator using a suitable Java method.
+In this step, your program should:
+
+1. Ask for the length of the secret code.
+2. Ask for the range of possible characters in the secret code.
+3. Generate a secret code using numbers and characters. This time, you should also print the secret code using `*` characters and print which characters were used to generate the secret code.
+4. Function as a fully playable game.
 
 
 #### Example
@@ -20,17 +24,20 @@ In this stage, rewrite the secret code generator using a suitable Java method.
 The greater-than symbol followed by a space `>` represents the user input. Note that it's not part of the input.
 
 ```
-Please, enter the secret code's length:
+Input the length of the secret code:
 > 4
+Input the number of possible symbols in the code:
+> 16
+The secret is prepared: **** (0-9, a-f).
 Okay, let's start a game!
 Turn 1:
-> 1234
+> 1a34
 Grade: 1 bull and 1 cow
 Turn 2:
-> 7354
+> b354
 Grade: 2 bulls and 1 cow
 Turn 3:
-> 9374
+> 93b4
 Grade: 4 bulls
 Congratulations! You guessed the secret code.
 ```

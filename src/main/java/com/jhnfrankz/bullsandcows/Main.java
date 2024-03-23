@@ -7,9 +7,12 @@ public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static String secretCode;
     private static int length;
-    private static String inputNumber;
+    private static int numberOfSymbols;
+    private static String inputCode;
     private static int cows = 0;
     private static int bulls = 0;
+    private static String digitsRange = "";
+    private static String alphabetsRange = "";
 
     public static void main(String[] args) {
         executeProgram();
@@ -17,17 +20,18 @@ public class Main {
 
     public static void executeProgram() {
         readLength();
+        readNumberOfSymbols();
         startGame();
     }
 
     public static void startGame() {
-        System.out.println("Okay, let's start a game!");
         generateRandomSecretCode();
+        System.out.println("Okay, let's start a game!");
 
         for (int i = 1; !isSecretCodeGuessed(); i++) {
             System.out.printf("Turn %d:%n", i);
 
-            readInputNumber();
+            readInputCode();
             countBullsAndCows();
             showGrade();
 
@@ -43,7 +47,7 @@ public class Main {
 
     // Read length for secret code
     public static void readLength() {
-        System.out.println("Please, enter the secret code's length:");
+        System.out.println("Input the length of the secret code:");
         length = Integer.parseInt(scanner.nextLine());
         checkLength();
     }
@@ -56,31 +60,79 @@ public class Main {
         }
     }
 
+    // Read length for secret code
+    public static void readNumberOfSymbols() {
+        System.out.println("Input the number of possible symbols in the code:");
+        numberOfSymbols = Integer.parseInt(scanner.nextLine());
+
+        if (numberOfSymbols < 0 || numberOfSymbols > 36) {
+            readNumberOfSymbols();
+        }
+    }
+
     public static void generateRandomSecretCode() {
         Random random = new Random();
         StringBuilder result = new StringBuilder();
 
-        for (int i = 0; result.length() < length; i++) {
-            int num = random.nextInt(10);
+        String finalSymbols = getFinalSymbols();
 
-            if (result.toString().contains(String.valueOf(num)) || (i == 0 && num == 0)) {
+        setRangeOfSymbols();
+
+        for (int i = 0; i < length; i++) {
+            int c = random.nextInt(numberOfSymbols);
+            String symbol = String.valueOf(finalSymbols.charAt(c));
+
+            if (result.toString().contains(symbol)) {
                 i--;
                 continue;
             }
 
-            result.append(num);
+            result.append(symbol);
         }
 
         secretCode = result.toString();
+
+        showSecretCodePrepared();
+    }
+
+    public static String getFinalSymbols() {
+        return "0123456789abcdefghijklmnopqrstuvwxyz".substring(0, numberOfSymbols);
+    }
+
+    public static void setRangeOfSymbols() {
+        String finalSymbols = getFinalSymbols();
+
+        if (numberOfSymbols > 10) {
+            digitsRange = finalSymbols.substring(0, 10);
+            alphabetsRange = finalSymbols.substring(10, numberOfSymbols);
+        } else {
+            digitsRange = finalSymbols.substring(0, numberOfSymbols);
+        }
+    }
+
+    public static void showSecretCodePrepared() {
+        if (numberOfSymbols > 10) {
+            System.out.printf("The secret is prepared: %s (0-9, %s).%n"
+                    , "*".repeat(length)
+                    , numberOfSymbols == 11
+                            ? "".concat(String.valueOf(alphabetsRange.charAt(0)))
+                            : "a-".concat(String
+                            .valueOf(alphabetsRange.charAt(alphabetsRange.length() - 1))));
+        } else {
+            System.out.printf("The secret is prepared: %s (%s-%s).%n"
+                    , "*".repeat(length)
+                    , digitsRange.charAt(0)
+                    , digitsRange.charAt(digitsRange.length() - 1));
+        }
     }
 
     // Read user input for game
-    public static void readInputNumber() {
-        inputNumber = scanner.nextLine();
+    public static void readInputCode() {
+        inputCode = scanner.nextLine();
     }
 
     public static void countBullsAndCows() {
-        if (secretCode.equals(inputNumber)) {
+        if (secretCode.equals(inputCode)) {
             bulls = secretCode.length();
         } else {
             for (int i = 0; i < secretCode.length(); i++) {
@@ -94,11 +146,11 @@ public class Main {
     }
 
     public static boolean isCow(int i) {
-        return secretCode.contains(String.valueOf(inputNumber.charAt(i)));
+        return secretCode.contains(String.valueOf(inputCode.charAt(i)));
     }
 
     public static boolean isBull(int i) {
-        return secretCode.charAt(i) == inputNumber.charAt(i);
+        return secretCode.charAt(i) == inputCode.charAt(i);
     }
 
     public static void clearBullsAndCows() {
