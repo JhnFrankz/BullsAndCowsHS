@@ -1,8 +1,6 @@
 package com.jhnfrankz.bullsandcows;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -59,17 +57,18 @@ public class Main {
     }
 
     public static void generateRandomSecretCode() {
-        List<Integer> randomList =
-                new ArrayList<>(List.of(0,1,2,3,4,5,6,7,8,9));
-
-        while (randomList.get(0) == 0) {
-            Collections.shuffle(randomList);
-        }
-
+        Random random = new Random();
         StringBuilder result = new StringBuilder();
 
-        for (var i : randomList.subList(0, length)) {
-            result.append(i);
+        for (int i = 0; result.length() < length; i++) {
+            int num = random.nextInt(10);
+
+            if (result.toString().contains(String.valueOf(num)) || (i == 0 && num == 0)) {
+                i--;
+                continue;
+            }
+
+            result.append(num);
         }
 
         secretCode = result.toString();
