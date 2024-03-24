@@ -48,16 +48,29 @@ public class Main {
     // Read length for secret code
     public static void readLength() {
         System.out.println("Input the length of the secret code:");
-        length = Integer.parseInt(scanner.nextLine());
-        checkLength();
+        String input = scanner.nextLine();
+        checkLength(input);
+        length = Integer.parseInt(input);
     }
 
-    public static void checkLength() {
+    public static void checkLength(String input) {
+        String numbers = "0123456789";
+
+        for (int i = 0; i < input.trim().length(); i++) {
+            if (!numbers.contains(String.valueOf(input.charAt(i))) || input.charAt(0) == '0') {
+                System.out.printf("Error: \"%s\" isn't a valid number.%n", input);
+                System.exit(0);
+            }
+        }
+
         if (length > 10) {
+//            error = true;
             System.out.printf("Error: can't generate a secret number with a length of %d because " +
                     "there aren't enough unique digits.%n", length);
             readLength();
         }
+
+//        if (error) readLength();
     }
 
     // Read length for secret code
@@ -65,8 +78,17 @@ public class Main {
         System.out.println("Input the number of possible symbols in the code:");
         numberOfSymbols = Integer.parseInt(scanner.nextLine());
 
-        if (numberOfSymbols < 0 || numberOfSymbols > 36) {
-            readNumberOfSymbols();
+//        numberOfSymbols < 0 ||
+        if (numberOfSymbols > 36) {
+            System.out.println("Error: maximum number of possible symbols in the code is 36 (0-9, a-z).");
+            System.exit(0);
+//            readNumberOfSymbols();
+        }
+
+        if (numberOfSymbols < length) {
+            System.out.printf("Error: it's not possible to generate a code with a length of %s " +
+                    "with %s unique symbols.%n", length, numberOfSymbols);
+            System.exit(0);
         }
     }
 
